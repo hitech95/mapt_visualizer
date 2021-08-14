@@ -1,0 +1,38 @@
+/**
+ * Theme: Additions for sky
+ */
+
+@import "~@picocss/pico/scss/themes/default/colors";
+@import "sky/icons";
+@import "sky/light";
+@import "sky/dark";
+
+// Format IP address using grids
+
+.ipv6 {
+  &.grid {
+    .value {
+      padding: calc(var(--spacing) / 2) 0;
+      border-radius: var(--border-radius);
+      background: var(--code-background-color);
+      font-size: 87.5%;
+      text-align: center;
+    }
+
+    .separator {
+      padding: calc(var(--spacing) / 4) 0;
+      font-size: 87.5%;
+      text-align: center;
+    }
+  }
+}
+
+.ipv4 {
+  &.grid > * {
+    padding: calc(var(--spacing) / 2) 0;
+    border-radius: var(--border-radius);
+    background: var(--code-background-color);
+    font-size: 87.5%;
+    text-align: center;
+  }
+}

@@ -1,0 +1,35 @@
+/**
+ * Sky: Main (Grid)
+ */
+
+// Config
+$navHeight: 3.5rem;
+
+// Main grid
+#content > main {
+  @if map-get($breakpoints, "lg") {
+    @media (min-width: map-get($breakpoints, "lg")) {
+      --block-spacing-horizontal: calc(var(--spacing) / 6);
+      grid-column-gap: calc(var(--block-spacing-horizontal) * 4);
+      display: grid;
+      grid-template-columns: 200px auto;
+    }
+  }
+
+  @if map-get($breakpoints, "xl") {
+    @media (min-width: map-get($breakpoints, "xl")) {
+      --block-spacing-horizontal: calc(var(--spacing) / 4);
+      grid-template-columns: 350px auto;
+    }
+  }
+
+  > aside,
+  div[role="document"] {
+    min-width: 0;
+  }
+}
+
+// Embedded SVG
+svg {
+  height: 1rem;
+}

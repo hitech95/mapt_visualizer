@@ -1,0 +1,14 @@
+// Light theme (Default) [Additions for sky]
+// Can be forced with data-theme="light"
+[data-theme="light"],
+:root:not([data-theme="dark"]) {
+  --invalid-color: #{$red-800};
+  --valid-color: #{$green-700};
+  // Navbar
+  --nav-background-color: #{rgba($white, .7)};
+  --nav-border-color: #{rgba($grey-500, .2)};
+  --nav-logo-color: #{$white};
+  // Alert
+  --alert-border-color: #{$red-800};
+  --alert-background-color:#{mix($red-800, $white)};
+}

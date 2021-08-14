@@ -1,0 +1,19 @@
+/*!
+ * Pico: Customs styles for Sky
+ */
+
+// Config
+@import "~@picocss/pico/scss/variables";
+
+// Theming
+@import "themes/sky";
+
+// Layout
+@import "layout/document";
+@import "layout/main";
+@import "layout/aside";
+
+// Components
+@import "components/nav";
+@import "components/alert";
+@import "components/theme-switcher";
