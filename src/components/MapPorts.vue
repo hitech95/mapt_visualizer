@@ -1,14 +1,39 @@
-<template v-if="valid">
-  <article class="map-props">
-    <header>MAP-T Ports</header>
-    <div class="fl">
+<template>
+  <article class="map-props" v-if="valid">
+    <header class="flex">
+      <div class="title">
+        <span>MAP-T Ports</span>
+      </div>
+      <div class="search">
+        <input
+          v-model="portFilter"
+          type="number"
+          min="1"
+          max="65535"
+          name="portFind"
+          placeholder="Validate Port"
+          :aria-invalid="
+            portFilter ? (!findPort(portFilter) ? 'true' : 'false') : false
+          "
+        />
+      </div>
+    </header>
+    <section class="ports flex">
       <template v-for="(item, index) in portRanges">
-        <div class="value" :class="`block-${index}`">{{ item.toString() }}</div>
+        <div class="element bullet" :class="`block-${index}`" :aria-valid="portFilter && item.inRange(portFilter)">
+          {{ item.toString() }}
+        </div>
       </template>
-    </div>
+    </section>
     <footer>
-      This is a simple calculation based on some reverse-engineering and it can
-      be wrong!
+      <span v-if="!portFilter"
+        >Use the search above to find if a port as available</span
+      >
+      <span class="text-success" v-else-if="portFilter && findPort(portFilter)"
+        >Specified port has been found in range
+        {{ portRanges.find((el) => el.inRange(portFilter)).toString() }}</span
+      >
+      <span class="text-error" v-else>The specified port has not been found</span>
     </footer>
   </article>
 </template>
@@ -31,14 +56,16 @@ interface IPortRange {
 export class PortRange implements IPortRange {
   min: number;
   max: number;
+  reserved: boolean;
 
   constructor(min: number, max: number, reserved: boolean) {
     this.min = min;
     this.max = max;
+    this.reserved = reserved;
   }
 
   inRange(port: number): boolean {
-    return this.min <= port && this.max <= port;
+    return !this.reserved && this.min <= port && port <= this.max;
   }
 
   toString(): string {
@@ -56,6 +83,8 @@ export default class MapPorts extends Vue {
   @Prop() private psidOffset!: number;
   @Prop() private psidLen!: number;
 
+  private portFilter: number | null;
+
   private aeBits: BigInteger | null;
   private psidBits: BigInteger | null;
 
@@ -63,6 +92,7 @@ export default class MapPorts extends Vue {
 
   constructor() {
     super();
+    this.portFilter = null;
     this.aeBits = null;
     this.psidBits = null;
     this.portRanges = [];
@@ -99,7 +129,6 @@ export default class MapPorts extends Vue {
               .shiftLeft(this.psidLen + portsBLen)
               .or(bits)
               .plus(bigInt(1).shiftLeft(portsBLen).minus(1));
-            //const max = (a << this.psidOffset + portsBLen) + this.psidBits?.toJSNumber() + ((1 << portsBLen) - 1)
 
             return new PortRange(min.toJSNumber(), max.toJSNumber(), a == 0);
           }
@@ -107,5 +136,43 @@ export default class MapPorts extends Vue {
       }
     }
   }
+
+  findPort(port: number): boolean {
+    if (!this.portRanges) return false;
+
+    return this.portRanges
+      .map((range) => {
+        return range.inRange(port);
+      })
+      .reduce((prev, val) => {
+        return prev || val;
+      }, false);
+  }
 }
 </script>
+
+<style lang="scss">
+.map-props {
+  header {
+    justify-content: space-between;
+
+    .title {
+      display: flex;
+      align-items: center;
+    }
+
+    .search {
+      input {
+        margin: 0;
+      }
+    }
+  }
+
+  .ports{
+    .element[aria-valid="true"]{
+      background: transparent;
+      border: 1px solid var(--bullet-active-border-color);
+    }
+  }
+}
+</style>
