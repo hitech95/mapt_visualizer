@@ -6,9 +6,10 @@
       <p>You can find the IPv6 PD under your router WAN status Page</p>
     </div>
     <div v-else>
-      <div v-if="ipv6Prefix">
+      <section v-if="ipv6Prefix">
         <span class="">IPv6 PD</span>
-        <div class="ipv6 grid">
+        <hr>
+        <div class="ip">
           <template
               v-for="(item, index) in ipv6Prefix.getFirst().getHexadecatet()"
           >
@@ -19,44 +20,63 @@
           <div class="separator">/</div>
           <div class="value">{{ ipv6Prefix.getPrefix().toString() }}</div>
         </div>
-      </div>
+      </section>
 
-      <div v-if="ipv6Addr">
+      <section v-if="ipv6Addr">
         <span class="">IPv6 Source Address</span>
-        <div class="ipv6 grid">
-          <template v-for="item in ipv6Addr.getHexadecatet()">
+        <hr>
+        <div class="ip">
+          <template v-for="(item, index) in ipv6Addr.getHexadecatet()">
             <div class="separator" v-if="index > 0">:</div>
             <div class="value">{{ item.toString() }}</div>
           </template>
         </div>
-      </div>
+      </section>
 
-      <div v-if="ipv4Addr">
+      <section v-if="ipv4Addr">
         <span class="">IPv4 Public Address</span>
-        <div class="ipv4 grid">
+        <hr>
+        <div class="ip">
           <template v-for="(item, index) in ipv4Addr.getOctets()">
             <div class="separator" v-if="index > 0">.</div>
             <div class="value">{{ item.toString() }}</div>
           </template>
         </div>
-      </div>
+      </section>
 
-      <!--          <span class="">IPV6 Source Addr</span>-->
-      <!--          <div class="ipv6 grid">-->
-      <!--            <div v-for="item in ipv6Addr.getHexadecatet()" >{{item.toString()}}</div>-->
-      <!--          </div>-->
-
-      <div v-if="aeBits || psidBits">
+      <section class="grid" v-if="aeBits || psidBits">
         <div v-if="aeBits">
           <span class="">AE</span>
-          <div><span class="">0x{{ aeBits.toString(16) }}</span></div>
+          <hr>
+          <div>
+            <span class="bullet">0x{{ aeBits.toString(16) }}</span>
+          </div>
+        </div>
+
+        <div v-if="aeBits">
+          <span class="">IPv4 Suffix</span>
+          <hr>
+          <div>
+            <span class="bullet">0x{{ aeBits.shiftRight(this.psidLen).toString(16) }}</span>
+          </div>
         </div>
 
         <div v-if="psidBits">
           <span class="">PSID</span>
-          <div><span class="">0x{{ psidBits.toString(16) }}</span></div>
+          <hr>
+          <div>
+            <span class="bullet">0x{{ psidBits.toString(16) }}</span>
+          </div>
         </div>
-      </div>
+
+        <div v-if="psidLen">
+          <span class="">Ports share ratio</span>
+          <hr>
+          <div>
+            <span class="bullet">1:{{ psidRatio.toString(10) }}</span>
+          </div>
+        </div>
+      </section>
     </div>
 
     <footer>
@@ -88,6 +108,7 @@ export default class MapProp extends Vue {
   private ipv4Suffix: BigInteger | null;
   private aeBits: BigInteger | null;
   private psidBits: BigInteger | null;
+  private psidRatio: BigInteger | null;
 
   constructor() {
     super();
@@ -96,6 +117,7 @@ export default class MapProp extends Vue {
     this.ipv4Suffix = null;
     this.aeBits = null;
     this.psidBits = null;
+    this.psidRatio = null
   }
 
   @Watch("valid")
@@ -140,6 +162,8 @@ export default class MapProp extends Vue {
               )
               .or(this.psidBits)
       );
+
+      this.psidRatio = bigInt(2).pow(bigInt(this.psidLen));
     }
   }
 }

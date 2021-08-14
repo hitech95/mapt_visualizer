@@ -1,7 +1,8 @@
 <template>
   <main class="home">
     <aside>
-      <div class="alert" v-if="errors.length > 0">
+      <div class="alert error" v-if="errors.length > 0">
+        <span>Please check the following errors:</span>
         <ul>
           <li v-for="item in errors" :key="item.message">
             {{ item }}
@@ -157,9 +158,6 @@ export default class Home extends Vue {
       this.ipv6pdStr
     );
     this.errors.push(...errorsV6);
-
-    console.log("ipv6 is correct", resultV6);
-    console.log("ipv4 is correct", resultV4);
 
     if (this.errors.length > 0) {
       this.ipv6PD = null;
