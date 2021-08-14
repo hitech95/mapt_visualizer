@@ -1,0 +1,14 @@
+/**
+ * Sky: Flex
+ */
+
+.flex {
+  display: flex;
+  flex-flow: row wrap;
+  align-content: space-between;
+  justify-content: space-evenly;
+
+  .element{
+    margin-bottom: calc(var(--spacing) / 2);
+  }
+}

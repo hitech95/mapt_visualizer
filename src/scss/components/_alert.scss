@@ -9,8 +9,25 @@
   border-style: solid;
   border-width: var(--border-width);
   border-radius: var(--border-radius);
-  border-color: var(--alert-border-color);
-  background-color: var(--alert-background-color);
+
+  font-size: 1rem;
+
+  ul{
+    font-size: 95%;
+    margin-bottom: 0;
+    li {
+      padding: 0;
+      display: inline list-item;
+      list-style: disc;
+    }
+  }
+
+  &.error{
+    border-color: var(--alert-border-color);
+    background-color: var(--alert-background-color);
+    text-color: $red-700;
+  }
+
 }
 
 // Headings for larger alerts

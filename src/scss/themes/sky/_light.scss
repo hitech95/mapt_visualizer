@@ -11,4 +11,6 @@
   // Alert
   --alert-border-color: #{$red-800};
   --alert-background-color:#{mix($red-800, $white)};
+  // Bullet
+  --bullet-active-border-color: #{$green-700};
 }

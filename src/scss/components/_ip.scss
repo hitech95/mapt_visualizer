@@ -1,0 +1,27 @@
+/**
+ * Sky: IPv4 IPv6
+ */
+
+.ip {
+
+  font-size: 87.5%;
+  text-align: center;
+
+  display: flex;
+  flex-flow: row nowrap;
+  align-content: space-between;
+  align-items: stretch;
+
+
+  .value {
+    padding: calc(var(--spacing) / 2) calc(var(--spacing) / 4);
+    border-radius: var(--border-radius);
+    background: var(--code-background-color);
+    flex-grow: 1;
+  }
+
+  .separator {
+    padding: calc(var(--spacing) / 4) calc(var(--spacing) / 4);
+    flex-grow: 0;
+  }
+}
