@@ -41,7 +41,7 @@
           <!-- EA -->
           <label for="ealen">EA Length</label>
           <input
-            v-model="eaLen"
+            v-model.number="eaLen"
             type="number"
             id="ealen"
             name="ealen"
@@ -54,7 +54,7 @@
           <!-- PSID -->
           <label for="psidlen">PSID Length</label>
           <input
-            v-model="psidLen"
+            v-model.number="psidLen"
             type="number"
             id="psidlen"
             name="psidlen"
@@ -66,7 +66,7 @@
 
           <label for="psidoff">PSID Offset</label>
           <input
-            v-model="psidOff"
+            v-model.number="psidOff"
             type="number"
             id="psidoff"
             name="psidoff"
@@ -86,12 +86,13 @@
         :ae-len="eaLen"
         :psid-len="psidLen"
       />
-            <MapPorts :valid="errors.length === 0 && Boolean(ipv6PD)"
-                      :ipv6-prefix="ipv6PD"
-                      :ae-len="eaLen"
-                      :psid-offset="psidOff"
-                      :psid-len="psidLen"
-            />
+      <MapPorts
+        :valid="errors.length === 0 && Boolean(ipv6PD)"
+        :ipv6-prefix="ipv6PD"
+        :ae-len="eaLen"
+        :psid-offset="psidOff"
+        :psid-len="psidLen"
+      />
     </div>
   </main>
 </template>
@@ -154,9 +155,7 @@ export default class Home extends Vue {
     );
     this.errors.push(...errorsV4);
 
-    const [resultV6, errorsV6] = Validator.isValidIPv6CidrRange(
-      this.ipv6pdStr
-    );
+    const [resultV6, errorsV6] = Validator.isValidIPv6CidrRange(this.ipv6pdStr);
     this.errors.push(...errorsV6);
 
     if (this.errors.length > 0) {
