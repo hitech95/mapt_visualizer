@@ -6,13 +6,13 @@
       </div>
       <div class="search">
         <input
-          v-model="portFilter"
-          type="number"
-          min="1"
-          max="65535"
-          name="portFind"
-          placeholder="Validate Port"
-          :aria-invalid="
+            v-model="portFilter"
+            type="number"
+            min="1"
+            max="65535"
+            name="portFind"
+            placeholder="Validate Port"
+            :aria-invalid="
             portFilter ? (!findPort(portFilter) ? 'true' : 'false') : false
           "
         />
@@ -20,17 +20,18 @@
     </header>
     <section class="ports flex">
       <template v-for="(item, index) in portRanges">
-        <div class="element bullet" :class="`block-${index}`" :aria-valid="portFilter && item.inRange(portFilter)">
+        <div class="element bullet" :class="`block-${index} ${item.reserved && 'reserved'}`"
+             :aria-valid="portFilter && item.inRange(portFilter)">
           {{ item.toString() }}
         </div>
       </template>
     </section>
     <footer>
       <span v-if="!portFilter"
-        >Use the search above to find if a port as available</span
+      >Use the search above to find if a port as available</span
       >
       <span class="text-success" v-else-if="portFilter && findPort(portFilter)"
-        >Specified port has been found in range
+      >Specified port has been found in range
         {{ portRanges.find((el) => el.inRange(portFilter)).toString() }}</span
       >
       <span class="text-error" v-else>The specified port has not been found</span>
@@ -39,10 +40,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { IPv6CidrRange } from "ip-num";
-import bigInt, { BigInteger } from "big-integer";
-import { Debounce } from "vue-debounce-decorator";
+import {Component, Prop, Vue, Watch} from "vue-property-decorator";
+import {IPv6CidrRange} from "ip-num";
+import bigInt, {BigInteger} from "big-integer";
+import {Debounce} from "vue-debounce-decorator";
 
 interface IPortRange {
   min: number;
@@ -107,13 +108,13 @@ export default class MapPorts extends Vue {
   dataChanged() {
     if (this.valid) {
       this.aeBits = this.ipv6Prefix
-        .getFirst()
-        .getValue()
-        .shiftRight(128 - this.ipv6Prefix.getPrefix().getValue())
-        .and(bigInt(1).shiftLeft(this.aeLen).minus(1));
+          .getFirst()
+          .getValue()
+          .shiftRight(128 - this.ipv6Prefix.getPrefix().getValue())
+          .and(bigInt(1).shiftLeft(this.aeLen).minus(1));
 
       this.psidBits = this.aeBits.and(
-        bigInt(1).shiftLeft(this.psidLen).minus(1)
+          bigInt(1).shiftLeft(this.psidLen).minus(1)
       );
 
       if (this.psidBits) {
@@ -121,17 +122,17 @@ export default class MapPorts extends Vue {
         const bits = this.psidBits.shiftLeft(portsBLen);
 
         this.portRanges = [...Array(1 << this.psidOffset).keys()].map(
-          (item, a) => {
-            const min = bigInt(a)
-              .shiftLeft(this.psidLen + portsBLen)
-              .or(bits);
-            const max = bigInt(a)
-              .shiftLeft(this.psidLen + portsBLen)
-              .or(bits)
-              .plus(bigInt(1).shiftLeft(portsBLen).minus(1));
+            (item, a) => {
+              const min = bigInt(a)
+                  .shiftLeft(this.psidLen + portsBLen)
+                  .or(bits);
+              const max = bigInt(a)
+                  .shiftLeft(this.psidLen + portsBLen)
+                  .or(bits)
+                  .plus(bigInt(1).shiftLeft(portsBLen).minus(1));
 
-            return new PortRange(min.toJSNumber(), max.toJSNumber(), a == 0);
-          }
+              return new PortRange(min.toJSNumber(), max.toJSNumber(), a == 0);
+            }
         );
       }
     }
@@ -141,12 +142,12 @@ export default class MapPorts extends Vue {
     if (!this.portRanges) return false;
 
     return this.portRanges
-      .map((range) => {
-        return range.inRange(port);
-      })
-      .reduce((prev, val) => {
-        return prev || val;
-      }, false);
+        .map((range) => {
+          return range.inRange(port);
+        })
+        .reduce((prev, val) => {
+          return prev || val;
+        }, false);
   }
 }
 </script>
@@ -168,10 +169,29 @@ export default class MapPorts extends Vue {
     }
   }
 
-  .ports{
-    .element[aria-valid="true"]{
+  .ports {
+    margin-left: calc(var(--spacing) / -4);
+    margin-right: calc(var(--spacing) / -4);
+
+    .element {
+      margin-left: calc(var(--spacing) / 4);
+      margin-right: calc(var(--spacing) / 4);
+      flex: 1 0 auto;
+    }
+
+    .element[aria-valid="true"] {
       background: transparent;
       border: 1px solid var(--bullet-active-border-color);
+    }
+
+    .reserved {
+      &.bullet {
+        color: var(--contrast);
+        background-color: var(--form-element-disabled-background-color);
+        border-color: var(--form-element-disabled-border-color);
+        opacity: var(--form-element-disabled-opacity);
+        cursor: not-allowed;
+      }
     }
   }
 }
