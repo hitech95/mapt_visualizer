@@ -3,7 +3,6 @@
  */
 
 .ip {
-
   font-size: 87.5%;
   text-align: center;
 
@@ -15,13 +14,23 @@
 
   .value {
     padding: calc(var(--spacing) / 2) calc(var(--spacing) / 4);
-    border-radius: var(--border-radius);
-    background: var(--code-background-color);
     flex-grow: 1;
   }
 
   .separator {
-    padding: calc(var(--spacing) / 4) calc(var(--spacing) / 4);
+    padding: 0 calc(var(--spacing) / 4);
     flex-grow: 0;
+  }
+
+  &.ipv6 {
+    .separator {
+      align-self: center;
+    }
+  }
+
+  &.ipv4 {
+    .separator {
+      align-self: flex-end;
+    }
   }
 }

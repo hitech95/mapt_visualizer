@@ -3,9 +3,17 @@
  */
 
 .bullet {
-  padding: calc(var(--spacing) / 2) calc(var(--spacing) / 4);
+  //padding: calc(var(--spacing) / 2) calc(var(--spacing) / 4);
+
+  padding: var(--form-element-spacing-vertical) var(--form-element-spacing-horizontal);
+  border: var(--border-width) solid var(--code-background-color);
   border-radius: var(--border-radius);
-  background: var(--code-background-color);
-  font-size: 87.5%;
+  outline: none;
+  background-color: var(--code-background-color);
+  box-shadow: var(--box-shadow);
+  color: var(--secondary);
+  font-size: 1rem;
+  font-weight: var(--font-weight);
+  line-height: var(--line-height);
   text-align: center;
 }

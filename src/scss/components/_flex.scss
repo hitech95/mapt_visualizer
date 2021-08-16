@@ -6,9 +6,13 @@
   display: flex;
   flex-flow: row wrap;
   align-content: space-between;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  margin-left: calc(var(--spacing) / -2);
+  margin-right: calc(var(--spacing) / -2);
 
-  .element{
+  .element {
+    margin-left: calc(var(--spacing) / 2);
+    margin-right: calc(var(--spacing) / 2);
     margin-bottom: calc(var(--spacing) / 2);
   }
 }
